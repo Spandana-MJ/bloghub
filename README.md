@@ -96,11 +96,11 @@ VITE_API_URL=http://localhost:5000
 📸 Screenshots
 
 
-![Homepage Screenshot](./screenshots/home.png)
-![Dashboard Screenshot](./screenshots/admin_dashboard.png)
-![add blog Screenshot](./screenshots/add_blog.png)
-![blog list Screenshot](./screenshots/blog_list.png)
-![comments Screenshot](./screenshots/comments.png)
+![Homepage Screenshot](screenshots/home.png)
+![Dashboard Screenshot](screenshots/admin_dashboard.png)
+![add blog Screenshot](screenshots/add_blog.png)
+![blog list Screenshot](screenshots/blog_list.png)
+![comments Screenshot](screenshots/comments.png)
 
 ---
 
@@ -112,4 +112,12 @@ VITE_API_URL=http://localhost:5000
 Spandana M J
 🌸 Passionate about full-stack web development and creating beautiful, user-centric applications.
 
-<p align="left"> <a href="https://www.linkedin.com/in/spandana-mj/" target="_blank"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white" /> </a> &nbsp; <a href="https://github.com/Spandana-MJ/" target="_blank"> <img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white" /> </a> </p> ```
+<p align="left">
+  <a href="https://www.linkedin.com/in/spandana-mj/" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/Spandana-MJ/" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white" />
+  </a>
+</p>
