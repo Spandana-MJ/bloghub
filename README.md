@@ -97,7 +97,7 @@ VITE_API_URL=http://localhost:5000
 📸 Screenshots
 
 
-![Homepage Screenshot](screenshots/home.png)
+![Homepage Screenshot](screenshots/Home.png)
 ![Dashboard Screenshot](screenshots/admin_dashboard.png)
 ![add blog Screenshot](screenshots/add_blog.png)
 ![blog list Screenshot](screenshots/blog_list.png)
