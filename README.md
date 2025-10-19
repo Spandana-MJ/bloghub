@@ -1,7 +1,5 @@
 # 📝 BlogHub
 
-
-
 <p align="center">
   <img src="https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react&logoColor=white" />
   <img src="https://img.shields.io/badge/Node.js-20.0.0-339933?logo=node.js&logoColor=white" />
@@ -9,7 +7,6 @@
   <img src="https://img.shields.io/badge/MongoDB-6.0.0-47A248?logo=mongodb&logoColor=white" />
   <img src="https://img.shields.io/badge/TailwindCSS-3.3.2-06B6D4?logo=tailwindcss&logoColor=white" />
 </p>
-
 
 **BlogHub** is a modern and minimal blogging platform built with the **MERN stack**, allowing users to explore, read, and comment on blogs.  
 It features a clean, elegant, and professional user interface focused on readability — perfect for showcasing technical or creative writing.
@@ -40,24 +37,21 @@ It features a clean, elegant, and professional user interface focused on readabi
 
 ---
 
-
-
-
----
-
 ## 📁 Project Structure
+
+
 
 mern-blog/
 │
-├── client/ # React Frontend (Vite)
+├── client/ 
 │ ├── src/
 │ ├── public/
 │ └── package.json
 │
-├── server/ # Express Backend
+├── server/ 
 │ ├── routes/
 │ ├── models/
-│ ├── uploads/ # uploaded images (gitignored)
+│ ├── uploads/ 
 │ ├── .env
 │ └── server.js
 │
@@ -118,4 +112,4 @@ VITE_API_URL=http://localhost:5000
 Spandana M J
 🌸 Passionate about full-stack web development and creating beautiful, user-centric applications.
 
-<p> <a href="https://www.linkedin.com/in/spandana-mj/" target="_blank"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white" /> </a> <a href="https://github.com/Spandana-MJ/" target="_blank"> <img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white" /> </a> </p>
+<p align="left"> <a href="https://www.linkedin.com/in/spandana-mj/" target="_blank"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin&logoColor=white" /> </a> &nbsp; <a href="https://github.com/Spandana-MJ/" target="_blank"> <img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white" /> </a> </p> ```
