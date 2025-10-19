@@ -4,6 +4,7 @@ import axios from "axios";
 import { Check, Trash2 } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import api from "../api";
 
 export default function Comments() {
   const [comments, setComments] = useState([]);
@@ -12,7 +13,7 @@ export default function Comments() {
     const fetchComments = async () => {
       try {
         const token = sessionStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/comments", {
+        const res = await axios.get("/api/comments", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setComments(res.data);
@@ -27,7 +28,7 @@ export default function Comments() {
     try {
       const token = sessionStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/comments/${id}/approve`,
+        `/api/comments/${id}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -48,7 +49,7 @@ export default function Comments() {
 
     try {
       const token = sessionStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/comments/${id}`, {
+      await axios.delete(`/api/comments/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments((prev) => prev.filter((c) => c._id !== id));

@@ -4,7 +4,7 @@ import axios from "axios";
 import { FileText, MessageCircle, CheckCircle, XCircle } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import api from "../api";
 
 export default function Dashboard() {
   const [counts, setCounts] = useState({ blogs: 0, comments: 0 });
@@ -14,10 +14,10 @@ export default function Dashboard() {
     const fetchData = async () => {
       const token = sessionStorage.getItem("token");
       try {
-        const blogsRes = await axios.get("http://localhost:5000/api/blogs", {
+        const blogsRes = await axios.get("/api/blogs", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const commentsRes = await axios.get("http://localhost:5000/api/comments", {
+        const commentsRes = await axios.get("/api/comments", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCounts({ blogs: blogsRes.data.length, comments: commentsRes.data.length });
@@ -33,7 +33,7 @@ export default function Dashboard() {
     const token = sessionStorage.getItem("token");
     try {
       await axios.put(
-        `http://localhost:5000/api/blogs/${id}/publish`,
+        `/api/blogs/${id}/publish`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -54,7 +54,7 @@ export default function Dashboard() {
 
     const token = sessionStorage.getItem("token");
     try {
-      await axios.delete(`http://localhost:5000/api/blogs/${id}`, {
+      await axios.delete(`/api/blogs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBlogs((prev) => prev.filter((b) => b._id !== id));

@@ -4,7 +4,7 @@ import axios from "axios";
 import { CheckCircle, XCircle, Trash2 } from "lucide-react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import api from "../api";
 
 export default function BlogList() {
   const [blogs, setBlogs] = useState([]);
@@ -12,7 +12,7 @@ export default function BlogList() {
   useEffect(() => {
     const fetchBlogs = async () => {
       const token = sessionStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/blogs", {
+      const res = await axios.get("/api/blogs", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBlogs(res.data);
@@ -22,7 +22,7 @@ export default function BlogList() {
 
   const handlePublish = async (id) => {
     const token = sessionStorage.getItem("token");
-    await axios.put(`http://localhost:5000/api/blogs/${id}/publish`, {}, {
+    await axios.put(`/api/blogs/${id}/publish`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setBlogs(prev => prev.map(b => b._id === id ? { ...b, published: !b.published } : b));
@@ -33,7 +33,7 @@ export default function BlogList() {
      if (!confirmDelete) return;
       try {
     const token = sessionStorage.getItem("token");
-    await axios.delete(`http://localhost:5000/api/blogs/${id}`, {
+    await axios.delete(`/api/blogs/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setBlogs((prev) => prev.filter((b) => b._id !== id));

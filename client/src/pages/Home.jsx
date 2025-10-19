@@ -6,7 +6,7 @@ import axios from "axios";
 import { Search } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import api from "../api";
 
 export default function Home() {
   const [blogs, setBlogs] = useState([]);
@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/public/blogs");
+        const res = await axios.get("/api/public/blogs");
         setBlogs(res.data);
       } catch (err) {
          toast.error(" Failed to load blogs");
@@ -85,7 +85,7 @@ export default function Home() {
                   {blog.image && (
                     <div className="h-44 overflow-hidden">
                       <img
-                        src={`http://localhost:5000/uploads/${blog.image}`}
+                        src={`/uploads/${blog.image}`}
                         alt={blog.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
