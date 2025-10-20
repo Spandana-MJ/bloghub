@@ -103,8 +103,8 @@ export default function Home() {
                   {blog.image && (
                     <div className="h-44 overflow-hidden">
                       <img
-                        src={`/uploads/${blog.image}`}
-                        alt={blog.title}
+                     src={`${import.meta.env.VITE_API_URL}/uploads/${blog.image}`}
+                   alt={blog.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
