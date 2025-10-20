@@ -31,9 +31,9 @@ export default function Home() {
   useEffect(() => {
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("/api/public/blogs");
+      const res = await api.get("/api/public/blogs");
       console.log("Fetched data:", res.data);
-      setBlogs(res.data.blogs || []);  // ✅ Always array
+      setBlogs(res.data || []);  // ✅ Always array
     } catch (err) {
       toast.error("Failed to load blogs");
       console.error(err);
