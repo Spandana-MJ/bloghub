@@ -12,7 +12,7 @@ export default function BlogList() {
   useEffect(() => {
     const fetchBlogs = async () => {
       const token = sessionStorage.getItem("token");
-      const res = await axios.get("/api/blogs", {
+      const res = await api.get("/api/blogs", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBlogs(res.data);
@@ -22,7 +22,7 @@ export default function BlogList() {
 
   const handlePublish = async (id) => {
     const token = sessionStorage.getItem("token");
-    await axios.put(`/api/blogs/${id}/publish`, {}, {
+    await api.put(`/api/blogs/${id}/publish`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setBlogs(prev => prev.map(b => b._id === id ? { ...b, published: !b.published } : b));
@@ -33,7 +33,7 @@ export default function BlogList() {
      if (!confirmDelete) return;
       try {
     const token = sessionStorage.getItem("token");
-    await axios.delete(`/api/blogs/${id}`, {
+    await api.delete(`/api/blogs/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setBlogs((prev) => prev.filter((b) => b._id !== id));

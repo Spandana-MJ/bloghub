@@ -51,7 +51,7 @@ export default function AddBlog() {
       formData.append("published", publish ? "true" : "false");
       if (image) formData.append("image", image);
 
-      await axios.post("/api/blogs", formData, {
+      await api.post("/api/blogs", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,

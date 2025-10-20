@@ -18,7 +18,7 @@ export default function BlogDetails() {
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(
+        const res = await api.get(
           `/api/public/blogs/${id}`
         );
         setBlog(res.data.blog);
@@ -34,7 +34,7 @@ export default function BlogDetails() {
   const handleComment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`/api/public/blogs/${id}/comments`, {
+      await api.post(`/api/public/blogs/${id}/comments`, {
         name,
         text,
       });

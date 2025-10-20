@@ -21,7 +21,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/login", {
+    console.log("API URL being used:", import.meta.env.VITE_API_URL);
+    const res = await api.post("/api/auth/login", {
         email,
         password,
       });

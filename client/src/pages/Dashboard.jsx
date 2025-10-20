@@ -14,10 +14,10 @@ export default function Dashboard() {
     const fetchData = async () => {
       const token = sessionStorage.getItem("token");
       try {
-        const blogsRes = await axios.get("/api/blogs", {
+        const blogsRes = await api.get("/api/blogs", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const commentsRes = await axios.get("/api/comments", {
+        const commentsRes = await api.get("/api/comments", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCounts({ blogs: blogsRes.data.length, comments: commentsRes.data.length });
@@ -54,7 +54,7 @@ export default function Dashboard() {
 
     const token = sessionStorage.getItem("token");
     try {
-      await axios.delete(`/api/blogs/${id}`, {
+      await api.delete(`/api/blogs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBlogs((prev) => prev.filter((b) => b._id !== id));

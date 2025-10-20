@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 
 // Admin login only
 router.post("/login", async (req, res) => {
+   console.log(req.body); 
   const { email, password } = req.body;
 
   try {

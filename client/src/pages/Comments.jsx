@@ -13,7 +13,7 @@ export default function Comments() {
     const fetchComments = async () => {
       try {
         const token = sessionStorage.getItem("token");
-        const res = await axios.get("/api/comments", {
+        const res = await api.get("/api/comments", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setComments(res.data);
@@ -27,7 +27,7 @@ export default function Comments() {
   const handleApprove = async (id) => {
     try {
       const token = sessionStorage.getItem("token");
-      await axios.put(
+      await api.put(
         `/api/comments/${id}/approve`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
@@ -49,7 +49,7 @@ export default function Comments() {
 
     try {
       const token = sessionStorage.getItem("token");
-      await axios.delete(`/api/comments/${id}`, {
+      await api.delete(`/api/comments/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setComments((prev) => prev.filter((c) => c._id !== id));

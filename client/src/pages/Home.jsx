@@ -12,18 +12,36 @@ export default function Home() {
   const [blogs, setBlogs] = useState([]);
   const [search, setSearch] = useState("");
 
+  // useEffect(() => {
+  //   const fetchBlogs = async () => {
+  //     try {
+  //       const res = await axios.get("/api/public/blogs");
+  //       console.log("API response:", res.data);
+
+  //       setBlogs(res.data);
+  //     } catch (err) {
+  //        toast.error(" Failed to load blogs");
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchBlogs();
+  // }, []);
+
+
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const res = await axios.get("/api/public/blogs");
-        setBlogs(res.data);
-      } catch (err) {
-         toast.error(" Failed to load blogs");
-        console.error(err);
-      }
-    };
-    fetchBlogs();
-  }, []);
+  const fetchBlogs = async () => {
+    try {
+      const res = await axios.get("/api/public/blogs");
+      console.log("Fetched data:", res.data);
+      setBlogs(res.data.blogs || []);  // ✅ Always array
+    } catch (err) {
+      toast.error("Failed to load blogs");
+      console.error(err);
+    }
+  };
+  fetchBlogs();
+}, []);
+
 
   const filtered = blogs.filter((b) =>
     b.title.toLowerCase().includes(search.toLowerCase())
