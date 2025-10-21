@@ -6,6 +6,7 @@ const blogSchema = new mongoose.Schema({
   subtitle: { type: String, required: true },
   description: { type: String, required: true },
   image: String,
+   public_id: String, 
   published: { type: Boolean, default: false }, // ✅ default false
   createdAt: { type: Date, default: Date.now },
 });

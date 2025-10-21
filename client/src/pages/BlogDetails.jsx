@@ -59,7 +59,8 @@ export default function BlogDetails() {
       >
         {blog.image && (
           <img
-            src={`/uploads/${blog.image}`}
+            // src={`/uploads/${blog.image}`}
+             src={blog.image}
             alt={blog.title}
             className="w-full h-60 object-cover"
           />
