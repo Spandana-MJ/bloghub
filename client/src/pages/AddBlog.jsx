@@ -65,10 +65,24 @@ export default function AddBlog() {
       setImage(null);
       setImagePreview(null);
       setPublish(false);
-    } catch (err) {
-      console.error(err);
-      toast.error(" Error adding blog");
-    }
+     }
+      // catch (err) {
+    //   console.error(err);
+    //   toast.error(" Error adding blog");
+    // }
+    catch (err) {
+  if (err.response) {
+    console.error("Response Error:", err.response.data);
+    toast.error(`Error: ${err.response.data.message || "Failed to add blog"}`);
+  } else if (err.request) {
+    console.error("Request Error:", err.request);
+    toast.error("No response from server");
+  } else {
+    console.error("Unknown Error:", err.message);
+    toast.error("Something went wrong");
+  }
+}
+
   };
 
   return (
