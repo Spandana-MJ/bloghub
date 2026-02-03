@@ -106,7 +106,7 @@ export default function Dashboard() {
               <th className="p-4 font-semibold">Title</th>
               <th className="p-4 font-semibold">Date</th>
               <th className="p-4 font-semibold">Status</th>
-              <th className="p-4 font-semibold text-center">Actions</th>
+              {/* <th className="p-4 font-semibold text-center">Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -131,20 +131,20 @@ export default function Dashboard() {
                     </span>
                   )}
                 </td>
-                <td className="p-4 text-center space-x-2">
-                  <button
+                {/* <td className="p-4 text-center space-x-2"> */}
+                  {/* <button
                     onClick={() => handlePublish(blog._id)}
                     className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition text-sm font-medium"
                   >
                     {blog.published ? "Unpublish" : "Publish"}
-                  </button>
-                  <button
+                  </button> */}
+                  {/* <button
                     onClick={() => handleDelete(blog._id)}
                     className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition text-sm font-medium"
                   >
                     Delete
-                  </button>
-                </td>
+                  </button> */}
+                {/* </td> */}
               </tr>
             ))}
             {blogs.length === 0 && (
