@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
@@ -7,10 +6,18 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const { loginLimiter } = require("../middleware/rateLimiter");
 const { validate, loginValidation } = require("../middleware/validators");
-// Admin login
+
+// Cookie options — hardcoded for cross domain production
+const cookieOptions = {
+  httpOnly: true,
+  secure: true,      // always true — Render uses HTTPS
+  sameSite: "none",  // must be none for Vercel → Render cross domain
+  maxAge: 24 * 60 * 60 * 1000,
+};
+
+// Login
 router.post("/login", loginLimiter, loginValidation, validate, async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -32,16 +39,8 @@ router.post("/login", loginLimiter, loginValidation, validate, async (req, res) 
       { expiresIn: "1d" }
     );
 
-    // Set token as httpOnly cookie
-    res.cookie("token", token, {
-      httpOnly: true, // JS cannot read this cookie
-      secure: process.env.NODE_ENV === "production", // HTTPS only in production
-      sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
-    });
-
+    res.cookie("token", token, cookieOptions);
     res.json({ message: "Login successful" });
-    // No token in response body anymore
 
   } catch (err) {
     console.error(err);
@@ -49,18 +48,14 @@ router.post("/login", loginLimiter, loginValidation, validate, async (req, res) 
   }
 });
 
-// Check if user is logged in (called on app load)
+// Check auth status
 router.get("/me", auth, (req, res) => {
   res.json({ user: req.user });
 });
 
-// Logout — clears the cookie
+// Logout
 router.post("/logout", (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
-  });
+  res.clearCookie("token", cookieOptions);
   res.json({ message: "Logged out successfully" });
 });
 

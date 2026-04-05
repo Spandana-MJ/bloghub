@@ -1,33 +1,32 @@
-
+// middleware/rateLimiter.js
 const rateLimit = require("express-rate-limit");
 
-// General API limiter
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // max 100 requests per 15 minutes per IP
-  message: {
-    message: "Too many requests, please try again after 15 minutes"
-  },
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: "Too many requests, please try again later" },
   standardHeaders: true,
   legacyHeaders: false,
+  // Fix for Render proxy
+  skip: (req) => process.env.NODE_ENV === "development",
 });
 
-// Strict limiter for login — prevents brute force
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // only 5 login attempts per 15 minutes
-  message: {
-    message: "Too many login attempts, please try again after 15 minutes"
-  },
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: "Too many login attempts, please try again later" },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === "development",
 });
 
-// Comment limiter — prevents comment spam
 const commentLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 3, // max 3 comments per minute
-  message: {
-    message: "Too many comments, please slow down"
-  },
+  windowMs: 60 * 1000,
+  max: 5,
+  message: { message: "Too many comments, please slow down" },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === "development",
 });
 
 module.exports = { apiLimiter, loginLimiter, commentLimiter };

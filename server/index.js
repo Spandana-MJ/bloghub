@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
@@ -13,73 +12,81 @@ const {
   loginLimiter,
   commentLimiter,
 } = require("./middleware/rateLimiter");
-const { sanitizeBody } = require("./middleware/sanitize");
+
 connectDB();
 
 const app = express();
 
-// 1. CORS
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:4173",
-  process.env.CLIENT_URL,
-].filter(Boolean);
+// CRITICAL — trust Render's proxy
+// fixes ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+app.set("trust proxy", 1);
 
+// CORS — must be before everything else
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:4173",
+      "https://bloghub-eight-alpha.vercel.app",
+      process.env.CLIENT_URL,
+    ].filter(Boolean),
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
 
-// 2. Security headers
-app.use(helmet());
+// Handle preflight requests for all routes
+app.options("*", cors());
 
-// 3. Cookie parser
+// Security headers
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginOpenerPolicy: { policy: "unsafe-none" },
+  })
+);
+
+// Cookie parser
 app.use(cookieParser());
 
-// 4. Body parsers
+// Body parsers
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-// 5. Request logging
+// Logging
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 } else {
   app.use(morgan("combined"));
 }
-app.use(sanitizeBody);
-// 6. Static files
+
+// Static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// 7. Rate limiting
+// Rate limiting
 app.use("/api", apiLimiter);
 app.use("/api/auth/login", loginLimiter);
 app.use("/api/public/blogs/:id/comments", commentLimiter);
 
-// 8. Health check
+// Health check
 app.get("/health", (req, res) => {
   res.json({
     status: "OK",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV,
+    clientUrl: process.env.CLIENT_URL,
   });
 });
 
-// 9. Routes
+// Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/blogs", require("./routes/blogs"));
 app.use("/api/comments", require("./routes/comments"));
 app.use("/api/public", require("./routes/public"));
 
-// 10. Global error handler
+// Global error handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
