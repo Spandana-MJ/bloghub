@@ -17,27 +17,24 @@ connectDB();
 
 const app = express();
 
-// CRITICAL — trust Render's proxy
-// fixes ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+// Trust Render proxy — fixes rate limiter X-Forwarded-For error
 app.set("trust proxy", 1);
 
-// CORS — must be before everything else
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:4173",
-      "https://bloghub-eight-alpha.vercel.app",
-      process.env.CLIENT_URL,
-    ].filter(Boolean),
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
-  })
-);
+// CORS options — defined once and reused
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "https://bloghub-eight-alpha.vercel.app",
+    process.env.CLIENT_URL,
+  ].filter(Boolean),
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+};
 
-// Handle preflight requests for all routes
-app.options("*", cors());
+// Apply CORS
+app.use(cors(corsOptions));
 
 // Security headers
 app.use(
