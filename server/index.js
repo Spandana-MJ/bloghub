@@ -1,4 +1,9 @@
-require("dotenv").config();
+// Only load .env file in development
+// In production Render injects variables directly
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
@@ -13,30 +18,50 @@ const {
   commentLimiter,
 } = require("./middleware/rateLimiter");
 
+// Temporary check — remove after confirming
+console.log("ENV CHECK:", {
+  hasMongoUri: !!process.env.MONGO_URI,
+  hasJwtSecret: !!process.env.JWT_SECRET,
+  hasCloudinary: !!process.env.CLOUDINARY_CLOUD_NAME,
+  nodeEnv: process.env.NODE_ENV,
+  clientUrl: process.env.CLIENT_URL,
+});
+
 connectDB();
 
 const app = express();
 
-// Trust Render proxy — fixes rate limiter X-Forwarded-For error
 app.set("trust proxy", 1);
 
-// CORS options — defined once and reused
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:4173",
-    "https://bloghub-eight-alpha.vercel.app",
-    process.env.CLIENT_URL,
-  ].filter(Boolean),
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "http://localhost:4173",
+      "https://bloghub-eight-alpha.vercel.app",
+      process.env.CLIENT_URL,
+    ].filter(Boolean);
+
+    const isVercelPreview = origin.includes(
+      "spandana-m-js-projects.vercel.app"
+    );
+
+    if (allowedOrigins.includes(origin) || isVercelPreview) {
+      return callback(null, true);
+    }
+
+    console.log("CORS blocked:", origin);
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
 };
 
-// Apply CORS
 app.use(cors(corsOptions));
 
-// Security headers
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -44,29 +69,22 @@ app.use(
   })
 );
 
-// Cookie parser
 app.use(cookieParser());
-
-// Body parsers
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-// Logging
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 } else {
   app.use(morgan("combined"));
 }
 
-// Static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Rate limiting
 app.use("/api", apiLimiter);
 app.use("/api/auth/login", loginLimiter);
 app.use("/api/public/blogs/:id/comments", commentLimiter);
 
-// Health check
 app.get("/health", (req, res) => {
   res.json({
     status: "OK",
@@ -77,13 +95,11 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/blogs", require("./routes/blogs"));
 app.use("/api/comments", require("./routes/comments"));
 app.use("/api/public", require("./routes/public"));
 
-// Global error handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
