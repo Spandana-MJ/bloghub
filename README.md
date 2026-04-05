@@ -316,7 +316,7 @@ Required because Render has dynamic IPs
 
 ## 🖼️ Screenshots
 
-![Home Page](./screenshots/homepage.png)
+![Home Page](./screenshots/Homepage.png)
 
 ![dashboard page](./screenshots/Dashboard.png)
 
@@ -333,8 +333,8 @@ Required because Render has dynamic IPs
 ## 🤝 Author
 
 **Your Name**  
-GitHub: [@yourusername](https://github.com/Spandana-MJ)  
-LinkedIn: [Your LinkedIn](https://linkedin.com/in/spandana-mj)  
+GitHub: [Spandana-MJ](https://github.com/Spandana-MJ)  
+LinkedIn: [spandana-mj](https://linkedin.com/in/spandana-mj)  
 Email: spandanaspandumj@gmail.com
 
 ---
