@@ -40,7 +40,9 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:5173",
       "http://localhost:4173",
+       "https://bloghub-vd36.vercel.app",  
       "https://bloghub-eight-alpha.vercel.app",
+
       process.env.CLIENT_URL,
     ].filter(Boolean);
 
