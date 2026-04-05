@@ -1,32 +1,56 @@
 
-import { useState } from "react";
-import api from "../api";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import api from "../api";
 import RichTextEditor from "../components/RichTextEditor";
 
 const CATEGORIES = [
-  "Technology", "Lifestyle", "Travel",
-  "Food", "Health", "Business", "Other",
+  "Technology",
+  "Lifestyle",
+  "Travel",
+  "Food",
+  "Health",
+  "Business",
+  "Other",
 ];
 
-export default function AddBlog() {
+export default function EditBlog() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [category, setCategory] = useState("Other");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [publish, setPublish] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [image, setImage] = useState(null);
 
-  // resetKey forces TipTap editor to clear visually
-  // increment it after successful submit
-  const [resetKey, setResetKey] = useState(0);
+  useEffect(() => {
+    const fetchBlog = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(`/api/blogs/${id}`);
+        setTitle(res.data.title);
+        setSubtitle(res.data.subtitle);
+        setCategory(res.data.category || "Other");
+        setImagePreview(res.data.image || null);
+        setDescription(res.data.description || "");
+      } catch (err) {
+        toast.error("Failed to load blog");
+        navigate("/blog-list");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlog();
+  }, [id]);
 
   const onImageChange = (e) => {
     const file = e.target.files[0];
     setImage(file || null);
-    setImagePreview(file ? URL.createObjectURL(file) : null);
+    setImagePreview(file ? URL.createObjectURL(file) : imagePreview);
   };
 
   const handleSubmit = async (e) => {
@@ -42,37 +66,31 @@ export default function AddBlog() {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("subtitle", subtitle);
-      formData.append("description", description);
       formData.append("category", category);
-      formData.append("published", publish ? "true" : "false");
+      formData.append("description", description);
       if (image) formData.append("image", image);
 
-      await api.post("/api/blogs", formData, {
+      await api.put(`/api/blogs/${id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Blog added successfully!");
-
-      // Reset all fields
-      setTitle("");
-      setSubtitle("");
-      setCategory("Other");
-      setDescription("");
-      setImage(null);
-      setImagePreview(null);
-      setPublish(false);
-
-      // This triggers TipTap to clear visually
-      setResetKey((prev) => prev + 1);
-
+      toast.success("Blog updated successfully!");
+      navigate("/blog-list");
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Something went wrong"
-      );
+      toast.error("Failed to update blog");
     } finally {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-10 w-10
+                        border-4 border-indigo-500 border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center
@@ -82,7 +100,7 @@ export default function AddBlog() {
                       shadow-lg border border-gray-200 p-8">
         <h1 className="text-3xl font-bold text-center mb-6
                        text-gray-900">
-          ✍️ Add New Blog
+          ✏️ Edit Blog
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -156,12 +174,9 @@ export default function AddBlog() {
                                text-gray-700 mb-1">
               Description
             </label>
-            {/* resetKey causes editor to clear after submit */}
             <RichTextEditor
-              key={resetKey}
               value={description}
               onChange={setDescription}
-              resetKey={resetKey}
             />
           </div>
 
@@ -170,7 +185,7 @@ export default function AddBlog() {
             <div className="flex-1">
               <label className="block text-sm font-semibold
                                  text-gray-700 mb-1">
-                Upload Image
+                Update Image (optional)
               </label>
               <input
                 type="file"
@@ -197,23 +212,6 @@ export default function AddBlog() {
             </div>
           </div>
 
-          {/* Publish */}
-          <div className="flex items-center gap-3">
-            <input
-              id="publishNow"
-              type="checkbox"
-              checked={publish}
-              onChange={(e) => setPublish(e.target.checked)}
-              className="h-5 w-5 accent-indigo-600"
-            />
-            <label
-              htmlFor="publishNow"
-              className="font-medium text-gray-700"
-            >
-              Publish Now
-            </label>
-          </div>
-
           <button
             type="submit"
             disabled={saving}
@@ -222,7 +220,7 @@ export default function AddBlog() {
                        transition disabled:opacity-50
                        disabled:cursor-not-allowed"
           >
-            {saving ? "Adding Blog..." : "Add Blog"}
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </form>
       </div>

@@ -1,5 +1,10 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import PublicLayout from "./layouts/PublicLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Home from "./pages/Home";
@@ -7,8 +12,10 @@ import BlogDetails from "./pages/BlogDetails";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AddBlog from "./pages/AddBlog";
+import EditBlog from "./pages/EditBlog";
 import BlogList from "./pages/BlogList";
 import Comments from "./pages/Comments";
+import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,9 +23,11 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <Router>
-      {/* 🔔 Toast container for all pages */}
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
-
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+      />
       <Routes>
         {/* Public pages */}
         <Route element={<PublicLayout />}>
@@ -37,12 +46,13 @@ function App() {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-blog" element={<AddBlog />} />
+          <Route path="/edit-blog/:id" element={<EditBlog />} />
           <Route path="/blog-list" element={<BlogList />} />
           <Route path="/comments" element={<Comments />} />
         </Route>
 
-        {/* Redirect unknown paths */}
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* 404 page */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

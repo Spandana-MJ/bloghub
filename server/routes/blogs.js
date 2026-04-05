@@ -1,37 +1,20 @@
 
-
-
-
 const express = require("express");
 const router = express.Router();
 const Blog = require("../models/Blog");
 const auth = require("../middleware/auth");
-const multer = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("cloudinary").v2;
+const upload = require("../middleware/upload");
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
-// Configure Multer storage for Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "blog_images",
-    allowed_formats: ["jpg", "jpeg", "png", "avif"],
-  },
-});
+const {
+  validate,
+  blogValidation,
+} = require("../middleware/validators");
 
-const upload = multer({ storage });
-
-// GET all blogs
+// GET all blogs (admin)
 router.get("/", auth, async (req, res) => {
   try {
-    const blogs = await Blog.find();
+    const blogs = await Blog.find().sort({ createdAt: -1 });
     res.json(blogs);
   } catch (err) {
     console.error(err);
@@ -39,17 +22,31 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// POST add blog
-router.post("/", auth, upload.single("image"), async (req, res) => {
+// GET single blog by id (admin - for edit form)
+router.get("/:id", auth, async (req, res) => {
   try {
-    const { title, subtitle, description, published } = req.body;
-    const image = req.file ? req.file.path : null; // Cloudinary returns full URL in path
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
+    res.json(blog);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// POST add blog
+router.post("/", auth, upload.single("image"),blogValidation,
+  validate, async (req, res) => {
+  try {
+    const { title, subtitle, description, published, category } = req.body;
+    const image = req.file ? req.file.path : null;
 
     const blog = new Blog({
       title,
       subtitle,
       description,
       image,
+      category: category || "Other",
       published: published === "true",
     });
 
@@ -58,6 +55,28 @@ router.post("/", auth, upload.single("image"), async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error while creating blog" });
+  }
+});
+
+// PUT update blog content (edit)
+router.put("/:id", auth, upload.single("image"), async (req, res) => {
+  try {
+    const { title, subtitle, description, category } = req.body;
+    const updateData = { title, subtitle, description, category };
+
+    if (req.file) updateData.image = req.file.path;
+
+    const blog = await Blog.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    );
+
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
+    res.json(blog);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error while updating blog" });
   }
 });
 
@@ -72,18 +91,19 @@ router.put("/:id/publish", auth, async (req, res) => {
     res.json(blog);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error while updating blog" });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // DELETE blog
 router.delete("/:id", auth, async (req, res) => {
   try {
-    await Blog.findByIdAndDelete(req.params.id);
+    const blog = await Blog.findByIdAndDelete(req.params.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
     res.json({ message: "Blog deleted" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error while deleting blog" });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

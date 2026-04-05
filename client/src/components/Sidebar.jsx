@@ -2,14 +2,16 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { LayoutDashboard, FilePlus, List, MessageSquare, LogOut, Menu, X, Users, BarChart2 } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+
 
 export default function Sidebar({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem("token");
+const { logout } = useAuth();
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
   };
 
