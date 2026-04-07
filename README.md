@@ -5,8 +5,14 @@ Features secure authentication, rich text editing, image uploads,
 comment moderation, and a complete admin panel.
 
 ## 🌐 Live Demo
-**Frontend:** https://your-app.vercel.app  
-**Backend API:** https://your-api.onrender.com
+**Live:** https://bloghub-vd36.vercel.app/  
+
+
+🎬 **Project Demo**
+
+
+
+[![Watch Demo](./assets/Homepage.png)](https://drive.google.com/file/d/1D3QWv9OT5elzrwEwRBooRuNeSUo1zzp2/view?usp=sharing)
 
 > **Admin Login for Demo**  
 > Email: Admin@gmail.com  
